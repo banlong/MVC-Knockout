@@ -14,12 +14,24 @@ namespace MVCK.Controllers
     {
         private BookContext db = new BookContext();
 
+        //// GET: Authors
+        //public ActionResult Index([Form] QueryOptions queryOptions)
+        //{
+        //    var authors = db.Authors.OrderBy(queryOptions.Sort);
+
+
+        //    ViewBag.QueryOptions = queryOptions;
+        //    return View(authors.ToList());
+        //}
+
         // GET: Authors
-        public ActionResult Index([Form] QueryOptions queryOptions)
-        {
-            var authors = db.Authors.OrderBy(queryOptions.Sort);
-
-
+        public ActionResult Index([Form] QueryOptions queryOptions) {
+            var start = (queryOptions.CurrentPage - 1) * queryOptions.PageSize;
+            var authors = db.Authors.
+            OrderBy(queryOptions.Sort).
+            Skip(start).
+            Take(queryOptions.PageSize);
+            queryOptions.TotalPages = (int)Math.Ceiling((double)db.Authors.Count() / queryOptions.PageSize);
             ViewBag.QueryOptions = queryOptions;
             return View(authors.ToList());
         }
