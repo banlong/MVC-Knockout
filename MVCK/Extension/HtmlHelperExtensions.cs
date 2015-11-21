@@ -39,6 +39,7 @@ namespace MVCK.Extension
                 "glyphicon-", sortIcon);
         }
 
+        //build button Next/Previous
         public static MvcHtmlString BuildNextPreviousLinks(this HtmlHelper htmlHelper, QueryOptions queryOptions, string actionName)
         {
             var urlHelper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
@@ -71,6 +72,10 @@ namespace MVCK.Extension
 
         private static string BuildPreviousLink(UrlHelper urlHelper, QueryOptions queryOptions, string actionName)
         {
+            //disable button, user click on disable button then do nothing
+            if (queryOptions.CurrentPage == 1) return "<a href=\"#\"><span aria-hidden=\"true\">&larr;</span> Previous</a>";
+
+            //other case
             return string.Format(
             "<a href=\"{0}\"><span aria-hidden=\"true\">&larr;</span> Previous</a>",
             urlHelper.Action(actionName, new
@@ -84,6 +89,9 @@ namespace MVCK.Extension
 
         private static string BuildNextLink(UrlHelper urlHelper, QueryOptions queryOptions, string actionName)
         {
+            //disable button, user click on disable button then do nothing
+            if (queryOptions.CurrentPage == queryOptions.TotalPages) return "<a href=\"#\">Next <span aria-hidden=\"true\">&rarr;</span></a>";
+
             return string.Format(
             "<a href=\"{0}\">Next <span aria-hidden=\"true\">&rarr;</span></a>",
             urlHelper.Action(actionName, new
